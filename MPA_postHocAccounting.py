@@ -20,9 +20,9 @@
  *                                                                         *
  ***************************************************************************/
 """
-from PyQt5.QtCore import QFileInfo
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QAction, \
+from qgis.PyQt.QtCore import QFileInfo
+from qgis.PyQt.QtGui import QIcon
+from qgis.PyQt.QtWidgets import QAction, \
     QTreeWidgetItem, \
     QTableWidgetItem, \
     QFileDialog, \
@@ -145,7 +145,7 @@ class MPAPostHocAccounting:
         self.dlg_base.fieldComboBox.setLayer(None)
         # self.dlg_base.inMPA_Layer.clear()
         # self.dlg_base.fieldComboBox.clear()
-        iterator = QTreeWidgetItemIterator(self.dlg_base.inData, QTreeWidgetItemIterator.All)
+        iterator = QTreeWidgetItemIterator(self.dlg_base.inData, QTreeWidgetItemIterator.IteratorFlag.All)
         while iterator.value():
             iterator.value().takeChildren()
             iterator += 1
@@ -168,22 +168,19 @@ class MPAPostHocAccounting:
         # set the mpaLayer for the field combo box
         def set_field_combo_box_layer(in_layer):
             self.dlg_base.fieldComboBox.setLayer(in_layer)
+            self.in_mpa_field = self.dlg_base.fieldComboBox.currentField()
 
-        self.dlg_base.inMPA_Layer.layerChanged.connect(set_field_combo_box_layer)
-        
         # set the MPA unique identifier field
         def set_mpa_field():
             self.in_mpa_field = self.dlg_base.fieldComboBox.currentField()
 
-        self.dlg_base.fieldComboBox.fieldChanged.connect(set_mpa_field)
-        self.in_mpa_field = self.dlg_base.fieldComboBox.currentField()
-            
         # add polygon layers and field names to tree widget
         def set_layers():
             # add layer names and field names to analysis selection window
             layer_fields_tree = self.dlg_base.inData
             layer_fields_tree.clear()
             for map_layer in self.iface.mapCanvas().layers():
+                print(map_layer.name())
                 if map_layer.name() == self.in_map_layer.name():
                     pass
                 else:
@@ -194,7 +191,12 @@ class MPAPostHocAccounting:
                         field_item = QTreeWidgetItem(tree_item)
                         field_item.setText(0, layer_field.name())
             self.dlg_base.inData.expandAll()
-
+      
+        # signals for the buttons to trigger the above functions
+        self.dlg_base.inMPA_Layer.layerChanged.connect(set_field_combo_box_layer)
+        self.dlg_base.inMPA_Layer.layerChanged.connect(set_layers)
+        self.dlg_base.fieldComboBox.fieldChanged.connect(set_mpa_field)
+        self.in_mpa_field = self.dlg_base.fieldComboBox.currentField()
         self.dlg_base.fieldComboBox.fieldChanged.connect(set_layers)
             
         # add selected layers and fields to processing list
@@ -240,7 +242,7 @@ class MPAPostHocAccounting:
             return area_dict
                 
         # this part is executed after the ok button is pressed on the base window
-        result_base = self.dlg_base.exec_()
+        result_base = self.dlg_base.exec()
         if result_base:
             table_widget = self.dlg_targets.tableWidget
             table_widget.setRowCount(0)
@@ -264,9 +266,9 @@ class MPAPostHocAccounting:
                     
             # resize columns to fit contents
             header = table_widget.horizontalHeader()
-            header.setSectionResizeMode(0, QHeaderView.Stretch)
-            header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
-            header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+            header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
+            header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
 
             # clear the output dialog box before showing the
             self.dlg_targets.outTable.clear()
@@ -291,7 +293,7 @@ class MPAPostHocAccounting:
             self.dlg_targets.outButton.clicked.connect(out_file)
 
             # this part is executed after the ok button is pressed on the targets window
-            result_target = self.dlg_targets.exec_()
+            result_target = self.dlg_targets.exec()
             if result_target:
                 # set the coverage and replication targets
                 for row in range(table_widget.rowCount()):

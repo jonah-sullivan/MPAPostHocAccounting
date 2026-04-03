@@ -5,26 +5,27 @@
 [general]
 name=MPA Results Analysis
 qgisMinimumVersion=3.0
+qgisMaximumVersion=4.99
 description= This plugin checks how your candidate MPA network meets your placement objectives
-version=0.26
+version=0.3
 author=Jonah Sullivan
 email=jonahsullivan79@gmail.com
 
 about=This plugin is used to check how a candidate MPA network meets Marine Spatial Planning MPA Placement Objectives. For example, the MPA network should cover 10 percent of each bioregion and each bioregion should be replicated (intersected) by 3 MPAs.
 
-tracker=https://github.com/MACBIO/MPAPostHocAccounting/issues
-repository=https://github.com/MACBIO/MPAPostHocAccounting
+tracker=https://github.com/jonah-sullivan/MPAPostHocAccounting/issues
+repository=https://github.com/jonah-sullivan/MPAPostHocAccounting
 # End of mandatory metadata
 
 # Recommended items:
 
 # Uncomment the following line and add your changelog:
-changelog="fix QgsMapLayerComboBox contents"
+changelog="upgrade for QGIS4 and Qt6"
 
 # Tags are comma separated with spaces allowed
 tags=mpa, allocation
 
-homepage=https://github.com/MACBIO/MPAPostHocAccounting
+homepage=https://github.com/jonah-sullivan/MPAPostHocAccounting
 category=Plugins
 icon=icon.png
 # experimental flag
