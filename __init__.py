@@ -32,4 +32,5 @@ def classFactory(iface):  # pylint: disable=invalid-name
     """
     #
     from .MPA_postHocAccounting import MPAPostHocAccounting
+
     return MPAPostHocAccounting(iface)
